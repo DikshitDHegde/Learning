@@ -10,7 +10,7 @@ class Encoder(nn.Module):
     def __init__(self,input_,layers=[1000,500,100,10]):
         super(Encoder, self).__init__()
 
-        self.Enc = nn.ModuleList()
+        X = []
 
         for layer in layers:
             x = [nn.Linear(input_,layer),
@@ -18,20 +18,18 @@ class Encoder(nn.Module):
             if layer == layers[-1]:
                 x = [nn.Linear(input_,layer)]
             
-            self.Enc.append(nn.Sequential(*x))
-
+            X.extend(x)
             input_= layer
-    
+        self.Enc = nn.Sequential(*X)
+
     def forward(self, x):
-        for ENC in self.Enc:
-            x = ENC(x)
-        
+        x = self.Enc(x)        
         return x
 
 class Projector(nn.Module):
     def __init__(self,input_,layers=[256,10]):
         super().__init__()
-        self.Proj = nn.ModuleList()
+        X = []
 
         for layer in layers:
             x = [
@@ -43,20 +41,19 @@ class Projector(nn.Module):
                     nn.Linear(input_,layer)
                 ]
             
-            self.Proj.append(nn.Sequential(*x))
+            X.extend(x)
             input_ = layer
+        self.Proj = nn.Sequential(*X)
 
     def forward(self,x):
-        for PROJ in self.Proj:
-            x = PROJ(x)
-        
+        x = self.Proj(x)
         return x
 
 class Decoder(nn.Module):
     def __init__(self,input_,layers=[10,100,500,1000,784]):
         super(Decoder,self).__init__()
 
-        self.Dec = nn.ModuleList()
+        X = []
 
         for layer in layers:
             x = [nn.Linear(input_,layer),
@@ -65,14 +62,12 @@ class Decoder(nn.Module):
                 x = [nn.Linear(input_,layer),
                      nn.Sigmoid()]
             
-            self.Dec.append(nn.Sequential(*x))
-
+            X.extend(x)
             input_= layer
+        self.Dec = nn.Sequential(*X)
         
     def forward(self, x):
-        for DEC in self.Dec:
-            x = DEC(x)
-        
+        x = self.Dec(x)
         return x
     
 
@@ -142,9 +137,7 @@ class Contrastive(nn.Module):
             input_=input_,
             layers=encoderLayers,
         )
-        self.Encoder2 = self.Encoder1
         self.latent1 = nn.Linear(encoderLayers[-1],encoderLayers[-1])
-        self.latent2 = self.latent1
 
         self.Projector1 = Projector(
             input_=2*encoderLayers[-1],
@@ -157,24 +150,13 @@ class Contrastive(nn.Module):
             layers=decoderLayers
         )
 
-
-    def re(self,mu,var):
-        std = torch.exp(0.5*var)
-        eps = torch.rand_like(std)
-        return std*eps + mu
-
     def forward(self,weakx,strongx):
         weakx = self.Encoder1(weakx)
         weak_z = self.latent1(weakx)
 
-        copy_weights(self.Encoder2,self.Encoder1)
-        copy_weights(self.latent2,self.latent1)
-
-        strongx = self.Encoder2(strongx)
-        strong_z = self.latent2(strongx)
-        # print(weak_z.shape,strong_z.shape)
+        strongx = self.Encoder1(strongx)
+        strong_z = self.latent1(strongx)
         Z = torch.cat((weak_z,strong_z),dim=1)
-        # print(Z.shape)
         latent = self.Projector1(Z)
 
         latent = self.latent3(latent)
@@ -190,7 +172,6 @@ class VaContrastive(nn.Module):
             input_=input_,
             layers=encoderLayers,
         )
-        self.Encoder2 = self.Encoder1
         self.mu1 = nn.Linear(encoderLayers[-1],encoderLayers[-1])
         self.mu2 = self.mu1
 
@@ -221,19 +202,14 @@ class VaContrastive(nn.Module):
 
         weak_z = self.re(weak_mu,weak_var)
 
-        copy_weights(self.Encoder2,self.Encoder1)
-        # copy_weights(self.mu2,self.mu1)
-        # copy_weights(self.var2,self.var1)
 
-        strongx = self.Encoder2(strongx)
+        strongx = self.Encoder1(strongx)
         strong_mu = self.mu2(strongx)
         strong_var = self.var2(strongx)
 
         strong_z = self.re(strong_mu,strong_var)
-        # print(weak_z.shape,strong_z.shape)
 
         Z = torch.cat((weak_z,strong_z),dim=1)
-        # print(Z.shape)
         latent = self.Projector1(Z)
 
         latent = self.latent3(latent)
@@ -255,11 +231,11 @@ def testContrastive():
     # summary(model,[(10,784),(10,784)],device="cpu")
     z1,z2,latent,recon = model(input1,input2)
 
-    for params in model.Encoder2.parameters():
-        params.requires_grad =False
+    # for params in model.Encoder2.parameters():
+    #     params.requires_grad =False
     
-    for params in model.latent2.parameters():
-        params.requires_grad =False
+    # for params in model.latent2.parameters():
+    #     params.requires_grad =False
     
     reco = nn.MSELoss()
     eloss_sim =  nn.CosineEmbeddingLoss(margin=0.0, size_average=None, reduce=None, reduction='mean')
