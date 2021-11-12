@@ -232,8 +232,9 @@ class dataSetFn(torch.utils.data.Dataset):
         image = self.paths[index][0]
         image = np.array(image,dtype=np.uint8)
         # print(image.shape)
-        image = np.reshape(image,(84,84,3))
-        image = Image.fromarray(image,mode='RGB') 
+        image = Image.fromarray(image[0]) 
+        # image = np.reshape(image,(84,84,3))
+        # image = Image.fromarray(image,mode='RGB') 
     
         Original_image = self.transform_original(image)
         Weak_image = self.transform_weak(image)

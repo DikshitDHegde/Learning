@@ -4,22 +4,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import umap.umap_ as umap
 
-with open('/home/beast/Experimentations/Dikshit/Contrastive Learning/CONV Learning/log/CONTRASTIVE/CIFAR_0009/FMNIST/Latent/Z1_190_.pickle', 'rb') as handle:
+with open('/home/dikshit/Desktop/Dikshit/Latent/Z1_10_.pickle', 'rb') as handle:
     data = pickle.load(handle)
 
 z = data['latent']
 target = data['target']
 
-standard_embedding = umap.UMAP(random_state=42).fit(z.data)
+standard_embedding = umap.UMAP(n_components=3, random_state=42, n_neighbors=15, min_dist=0.2, n_neighbors=15, min_dist=0.2).fit_transform(z)
 
-for i in [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]:
-    print(i)
-    with open(f'/home/beast/Experimentations/Dikshit/Contrastive Learning/CONV Learning/log/CONTRASTIVE/CIFAR_0009/FMNIST/Latent/Z1_{i}_.pickle', 'rb') as handle:
-        data = pickle.load(handle)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(standard_embedding[:,0],standard_embedding[:,1],standard_embedding[:,2], c=target, s=2, cmap='Spectral')
+ax.axis("off")
+# plt.scatter(standard_embedding[:, 0], standard_embedding[:, 1], c=target, s=0.1, cmap='Spectral')
+plt.show()
 
-    z = data['latent']
-    target = data['target']
-    test_embedding = standard_embedding.transform(z.data)
-    plt.figure()
-    plt.scatter(test_embedding[:, 0], test_embedding[:, 1], c=target, s=0.1, cmap='Spectral')
-    plt.savefig("CIFAR_%06d.png"%i)
+n_neighbors=5, min_dist=0.1

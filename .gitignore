@@ -1,0 +1,28 @@
+ConvAE/__pycache__/config.cpython-38.pyc
+ConvAE/__pycache__/Dataloader.cpython-38.pyc
+ConvAE/__pycache__/loss.cpython-38.pyc
+ConvAE/__pycache__/Model.cpython-38.pyc
+ConvAE/__pycache__/utils.cpython-38.pyc
+log/CONTRASTIVE/CIFAR/BatchSize 512 LR 0.001 Optimizer Adam Alpha0/events.out.tfevents.1633324120.cvgws02.806613.0
+log/CONTRASTIVE/CIFAR/BatchSize 512 LR 0.001 Optimizer Adam Alpha0/events.out.tfevents.1633353462.cvgws02.949536.0
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_10_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_20_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_30_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_40_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_50_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_60_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_70_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_80_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_90_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_100_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_110_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_120_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_130_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_140_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_150_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_160_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_170_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_180_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_190_.pickle
+log/CONTRASTIVE/CIFAR_001_0/FMNIST/Latent/Z1_200_.pickle
+log/CONTRASTIVE/CIFAR_001_0/MNIST/BatchSize 512 LR 0.001  Optim Adam alpha0.pth.tar

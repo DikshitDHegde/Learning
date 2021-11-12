@@ -21,8 +21,9 @@ import loss
 from config import config
 from Dataloader import RandAugmentCOLOR, RandAugmentMNIST, dataSetFn, loadData
 # from New_model import VAEConvContrastive, ConvContrastive # Contrastive, VaContrastive
+from Model import  Contrastive, VaContrastive
 # from Cifar_Model import VAEConvContrastive, ConvContrastive # Contrastive, VaContrastive
-from MINI_model import VAEConvContrastive, ConvContrastive # Contrastive, VaContrastive
+# from MINI_model import VAEConvContrastive, ConvContrastive # Contrastive, VaContrastive
 
 # from pytorch_msssim import SSIM
 
@@ -56,12 +57,14 @@ else:
     device = "cpu"
 
 
-batchsize = 1024
+batchsize = 512
 optimizer = "Adam"
 # optimizer = "SGD"
 lr = 1e-3
-dataset = loadData("/home/beast/DATA/DATASET_NPZ/MINI_Combined.npz")
-trainSet = dataSetFn(dataset=dataset, transform_original=transforms.ToTensor(), transform_weak=RandAugmentCOLOR(resolution=84,trans=transforms.ToTensor()))
+
+
+dataset = loadData("/home/cvg-ws02/DATA/DATASET_NPZ/MNIST_Combined.npz")
+trainSet = dataSetFn(dataset=dataset, transform_original=transforms.ToTensor(), transform_weak=RandAugmentMNIST(trans=transforms.ToTensor()))
 trainLoader = DataLoader(trainSet, batch_size=batchsize, shuffle=True,
                         num_workers=10, pin_memory=False, prefetch_factor=batchsize//4)
 
@@ -69,20 +72,20 @@ for alpha in [0]:
     args = config()
     utils.set_seed_globally(0, use_gpu)
 
-    # model = VaContrastive(
-    #     input_= 784,
-    #     encoderLayers=[500,500,2000,128],
-    #     projLayers=[256,10],
-    #     decoderLayers=[10,2000,500,500,784]
-    # ).to(device)
+    model = VaContrastive(
+        input_= 784,
+        encoderLayers=[500,500,2000,128],
+        projLayers=[20,10],
+        decoderLayers=[10,2000,500,500,784]
+    ).to(device)
 
-    model  = VAEConvContrastive(in_channels=3,resolution=84).to(device)
+    # model  = VAEConvContrastive(in_channels=3,resolution=84).to(device)
     
     # print("DATALOADER")
     optimize = get_optim(optimizer, model, lr)
     # criterion_con = nn.CrossEntropyLoss().to(device)
     # criterion_mse = nn.MSELoss().to(device)
-    criterion_mse = loss.reconLoss(in_channels=3, use_ssim=True, alpha=alpha).to(device)
+    criterion_mse = loss.reconLoss(in_channels=1, use_ssim=True, alpha=alpha).to(device)
     criterion_emb = loss.NCELoss(device=device)
 
     tb = SummaryWriter(
@@ -121,3 +124,14 @@ for alpha in [0]:
             )
 
     del model
+
+
+
+
+
+
+
+
+
+
+
